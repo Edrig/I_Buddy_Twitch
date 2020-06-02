@@ -2,7 +2,6 @@ from twitchio.ext import commands
 import asyncio
 import logging
 import globals
-import py3buddy
 
 from config import *
 
@@ -34,7 +33,7 @@ async def event_message(message):
 
 @bot.command(name='help')
 async def test_command(ctx):
-    await ctx.send("You can change The i-Buddy state by send command in tchat !left / !right / !wing high / !wing low ")
+    await ctx.send("You can change The i-Buddy state by send command in tchat !left / !right / !wing (high,low)")
 
 @bot.command(name='buddy')
 async def test_command(ctx):
@@ -65,15 +64,28 @@ async def middle_command(ctx):
 
 @bot.command(name='wing')
 async def wing_command(ctx):
-    cmds = ctx.content.split(' ')[-1]
-    print(cmds)
-    if cmds in ['high', 'low']:
-        globals.ibuddy.wings(cmds)
-        globals.ibuddy.sendcommand()
+    cmd = ctx.content.split(' ')[-1]
+    print(cmd)
 
+    if cmd == '!wing':
+        await ctx.send("Missing argument")
+
+    elif cmd in ['high', 'low', 'up', 'down']:
+        if cmd == 'up':
+            globals.ibuddy.wings('high')
+            globals.ibuddy.sendcommand()
+        elif cmd == 'down':
+            globals.ibuddy.wings('low')
+            globals.ibuddy.sendcommand()
+        elif cmd in ['high', 'low']:
+            globals.ibuddy.wings(cmd)
+            globals.ibuddy.sendcommand()
     else:
         await ctx.send("Bad argument")
 
+
+# WHITE:WINGSHIGH:HEART:GO:SLEEP",
+# RED:WINGSLOW:GO:SLEEP:NOHEART:LEFT:GO:SLEEP:RESET:BLUE:GO:SHORTSLEEP
 @bot.command(name='cmd')
 async def cmd_command(ctx):
     cmds = ctx.content.split()
