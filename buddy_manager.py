@@ -18,42 +18,65 @@ def init_buddy():
         print("No iBuddy found, or iBuddy not accessible", file=sys.stderr)
         sys.exit(1)
 
-def panic(ibuddy, paniccount):
+def panic(paniccount):
     # a demo version to show some of the capabilities of the iBuddy
 
     # first reset the iBuddy
-    ibuddy.reset()
+    globals.ibuddy.reset()
     for i in range(0, paniccount):
         # set the wings to high
-        ibuddy.wings('high')
+        globals.ibuddy.wings('high')
 
         # turn on the heart LED
-        ibuddy.toggleheart(True)
+        globals.ibuddy.toggleheart(True)
 
         # pick a random colour for the head LED
-        ibuddy.setcolour(random.choice(py3buddy.allcolours))
+        globals.ibuddy.setcolour(random.choice(py3buddy.allcolours))
 
         # wiggle randomly
-        ibuddy.wiggle(random.choice(['right', 'left', 'middle', 'middlereset']))
+        globals.ibuddy.wiggle(random.choice(['right', 'left', 'middle', 'middlereset']))
 
         # create the message, then send it, and sleep for 0.1 seconds
-        ibuddy.sendcommand()
+        globals.ibuddy.sendcommand()
         time.sleep(0.1)
 
         # set the wings to low
-        ibuddy.wings('low')
+        globals.ibuddy.wings('low')
 
         # turn off the heart LED
-        ibuddy.toggleheart(False)
+        globals.ibuddy.toggleheart(False)
 
         # pick a random colour for the head LED
-        ibuddy.setcolour(random.choice(py3buddy.allcolours))
+        globals.ibuddy.setcolour(random.choice(py3buddy.allcolours))
 
         # random wiggle
-        ibuddy.wiggle(random.choice(['right', 'left', 'middle', 'middlereset']))
-        ibuddy.sendcommand()
+        globals.ibuddy.wiggle(random.choice(['right', 'left', 'middle', 'middlereset']))
+        globals.ibuddy.sendcommand()
         time.sleep(0.1)
 
     # extra reset as sometimes the device doesn't respond
-    ibuddy.reset()
-    ibuddy.reset()
+    globals.ibuddy.reset()
+    globals.ibuddy.reset()
+
+def colourloop(loopcount):
+    globals.ibuddy.reset()
+    for i in range(0, loopcount):
+        for c in py3buddy.allcolours:
+            globals.ibuddy.setcolour(c)
+            globals.ibuddy.sendcommand()
+            time.sleep(1)
+    globals.ibuddy.reset()
+    globals.ibuddy.reset()
+
+def flaploop(loopcount):
+    globals.ibuddy.reset()
+    for i in range(0, loopcount):
+
+        # set the wings to high
+        globals.ibuddy.wings('high')
+        globals.ibuddy.sendcommand()
+        time.sleep(0.1)
+
+        globals.ibuddy.wings('low')
+        globals.ibuddy.sendcommand()
+        time.sleep(0.1)

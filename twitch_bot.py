@@ -2,6 +2,8 @@ from twitchio.ext import commands
 import asyncio
 import logging
 import globals
+import py3buddy
+import buddy_manager
 
 from config import *
 
@@ -32,8 +34,12 @@ async def event_message(message):
 
 
 @bot.command(name='help')
-async def test_command(ctx):
-    await ctx.send("You can change The i-Buddy state by send command in tchat !left / !right / !wing (high,low)")
+async def help_command(ctx):
+    await ctx.send("You can change The i-Buddy state by send command in tchat !buddy / !wing (high,low) / !heart (True/False)")
+
+@bot.command(name='aide')
+async def aide_command(ctx):
+    await ctx.send("Tu peux me contrôler en ecrivant dans le Tchat !buddy / !wing (high,low) / !heart (True/False)")
 
 @bot.command(name='buddy')
 async def test_command(ctx):
@@ -45,16 +51,16 @@ async def test_command(ctx):
         print("Executing: ", cmd)
         globals.ibuddy.executecommand(cmd)
     #globals.ibuddy.reset()
-    await ctx.send('Hello')
+    #await ctx.send('Hello')
 
 @bot.command(name='left')
 async def left_command(ctx):
-    globals.ibuddy.wiggle("left")
+    globals.ibuddy.wiggle("right")
     globals.ibuddy.sendcommand()
 
 @bot.command(name='right')
 async def right_command(ctx):
-    globals.ibuddy.wiggle("right")
+    globals.ibuddy.wiggle("left")
     globals.ibuddy.sendcommand()
 
 @bot.command(name='middle')
@@ -83,6 +89,76 @@ async def wing_command(ctx):
     else:
         await ctx.send("Bad argument")
 
+@bot.command(name='heart')
+async def color_command(ctx):
+    cmd = ctx.content.split(' ')[-1]
+    print(cmd)
+    if cmd == 'True' or cmd == 'true':
+        globals.ibuddy.toggleheart(True)
+        globals.ibuddy.sendcommand()
+    elif cmd == 'False' or cmd == 'false':
+        globals.ibuddy.toggleheart(False)
+        globals.ibuddy.sendcommand()
+
+@bot.command(name='color')
+async def color_command(ctx):
+
+    cmd = ctx.content.split(' ')[-1]
+    color = cmd.upper()
+    if color == "BLACK":
+        print("iBuddy chose: no colour!\n")
+        globals.ibuddy.setcolour(py3buddy.NOCOLOUR)
+        globals.ibuddy.sendcommand()
+    if color == "NOCOLOUR":
+        print("iBuddy chose: no colour!\n")
+        globals.ibuddy.setcolour(py3buddy.NOCOLOUR)
+        globals.ibuddy.sendcommand()
+    elif color == "RED":
+        print("iBuddy chose: red!\n")
+        globals.ibuddy.setcolour(py3buddy.RED)
+        globals.ibuddy.sendcommand()
+    elif color == "BLUE":
+        print("iBuddy chose: blue!\n")
+        globals.ibuddy.setcolour(py3buddy.BLUE)
+        globals.ibuddy.sendcommand()
+    elif color == "GREEN":
+        print("iBuddy chose: green!\n")
+        globals.ibuddy.setcolour(py3buddy.GREEN)
+        globals.ibuddy.sendcommand()
+    elif color == "CYAN":
+        print("iBuddy chose: cyan!\n")
+        globals.ibuddy.setcolour(py3buddy.CYAN)
+        globals.ibuddy.sendcommand()
+    elif color == "YELLOW":
+        print("iBuddy chose: yellow!\n")
+        globals.ibuddy.setcolour(py3buddy.YELLOW)
+        globals.ibuddy.sendcommand()
+    elif color == "PURPLE":
+        print("iBuddy chose: purple!\n")
+        globals.ibuddy.setcolour(py3buddy.PURPLE)
+        globals.ibuddy.sendcommand()
+    elif color == "WHITE":
+        print("iBuddy chose: white!\n")
+        globals.ibuddy.setcolour(py3buddy.WHITE)
+        globals.ibuddy.sendcommand()
+    #if cmd in ['nocolour', 'red', 'blue', 'green','cyan', 'yellow', 'purple', 'white']:
+    #print(cmd.upper())
+    #globals.ibuddy.setcolour(py3buddy.RED)
+    #globals.ibuddy.sendcommand()
+
+@bot.command(name='rainbow')
+async def rainbow_command(ctx):
+    buddy_manager.colourloop(1)
+
+@bot.command(name='panic')
+async def rainbow_command(ctx):
+
+    buddy_manager.panic(10)
+
+@bot.command(name='flap')
+async def rainbow_command(ctx):
+
+    buddy_manager.flaploop(10)
 
 # WHITE:WINGSHIGH:HEART:GO:SLEEP",
 # RED:WINGSLOW:GO:SLEEP:NOHEART:LEFT:GO:SLEEP:RESET:BLUE:GO:SHORTSLEEP
@@ -93,4 +169,3 @@ async def cmd_command(ctx):
         print("Executing: ", cmd)
         globals.ibuddy.executecommand(cmd)
     globals.ibuddy.reset()
-
