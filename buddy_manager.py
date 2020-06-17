@@ -6,6 +6,14 @@ import config
 import py3buddy
 import globals
 
+colorlist = {"NOCOLOUR": py3buddy.NOCOLOUR,
+             "RED": py3buddy.RED,
+             "BLUE": py3buddy.BLUE,
+             "GREEN": py3buddy.GREEN,
+             "CYAN": py3buddy.CYAN,
+             "YELLOW": py3buddy.YELLOW,
+             "PURPLE":py3buddy.PURPLE,
+             "WHITE": py3buddy.WHITE}
 
 def init_buddy():
 
@@ -18,6 +26,28 @@ def init_buddy():
         print("No iBuddy found, or iBuddy not accessible", file=sys.stderr)
         sys.exit(1)
 
+    globals.ibuddy.wiggle(globals.wingle)
+    globals.ibuddy.wings(globals.wing)
+    print(bool(globals.heart))
+    globals.ibuddy.toggleheart(eval(globals.heart))
+    globals.ibuddy.setcolour(get_color(globals.color))
+    globals.ibuddy.sendcommand()
+    print(get_status())
+
+def get_color(color):
+    for i in colorlist:
+        #print (i)
+        #print(colorlist[i])
+        if i is color:
+            return colorlist[i]
+
+def get_status():
+    #print("status: %s %s %s %s" %(globals.wingle,globals.wing,globals.heart,globals.color))
+    #ws_client.notify_state()
+    return "status: %s %s %s %s" %(globals.wingle,globals.wing,globals.heart,globals.color)
+
+def get_status_json():
+    return
 def panic(paniccount):
     # a demo version to show some of the capabilities of the iBuddy
 
@@ -69,7 +99,7 @@ def colourloop(loopcount):
     globals.ibuddy.reset()
 
 def flaploop(loopcount):
-    globals.ibuddy.reset()
+    #globals.ibuddy.reset()
     for i in range(0, loopcount):
 
         # set the wings to high
@@ -80,3 +110,5 @@ def flaploop(loopcount):
         globals.ibuddy.wings('low')
         globals.ibuddy.sendcommand()
         time.sleep(0.1)
+    globals.ibuddy.wings('low')
+    globals.ibuddy.sendcommand()

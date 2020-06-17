@@ -1,7 +1,13 @@
+import py3buddy
+
 def initialize():
     global ibuddy
     ibuddy = ""
-    wingle = ""
-    wing = ""
-    heart = ""
-    color = ""
+    global wingle
+    wingle = "middle"
+    global wing
+    wing = "low"
+    global heart
+    heart = "False"
+    global color
+    color = "NOCOLOUR"

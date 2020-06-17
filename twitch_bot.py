@@ -4,6 +4,9 @@ import logging
 import globals
 import py3buddy
 import buddy_manager
+import time
+
+import threading
 
 from config import *
 
@@ -41,8 +44,12 @@ async def help_command(ctx):
 async def aide_command(ctx):
     await ctx.send("Tu peux me contrôler en ecrivant dans le Tchat !buddy / !wing (high,low) / !heart (True/False)")
 
+@bot.command(name='status')
+async def status_command(ctx):
+    await ctx.send(buddy_manager.get_status())
+
 @bot.command(name='buddy')
-async def test_command(ctx):
+async def buddy_command(ctx):
     print("Demo 4: Executing commands\n")
     cmds = ["WHITE:WINGSHIGH:HEART:GO:SLEEP",
             "RED:WINGSLOW:GO:SLEEP:NOHEART:LEFT:GO:SLEEP:RESET",
@@ -74,31 +81,50 @@ async def wing_command(ctx):
     print(cmd)
 
     if cmd == '!wing':
-        await ctx.send("Missing argument")
+        #await ctx.send("Missing argument")
+        if globals.wing == "high":
+            globals.ibuddy.wings("low")
+            globals.ibuddy.sendcommand()
+            globals.wing = "low"
+        elif globals.wing == "low":
+            globals.ibuddy.wings("high")
+            globals.ibuddy.sendcommand()
+            globals.wing = "high"
 
-    elif cmd in ['high', 'low', 'up', 'down']:
-        if cmd == 'up':
-            globals.ibuddy.wings('high')
-            globals.ibuddy.sendcommand()
-        elif cmd == 'down':
-            globals.ibuddy.wings('low')
-            globals.ibuddy.sendcommand()
-        elif cmd in ['high', 'low']:
+'''
+    if cmd in ['high', 'low']:
             globals.ibuddy.wings(cmd)
             globals.ibuddy.sendcommand()
     else:
         await ctx.send("Bad argument")
+'''
+
 
 @bot.command(name='heart')
-async def color_command(ctx):
+async def heart_command(ctx):
     cmd = ctx.content.split(' ')[-1]
-    print(cmd)
+    #print(cmd)
+    #print("Test: %s " %(globals.heart))
+    if cmd == '!heart':
+        if globals.heart == "True":
+            globals.ibuddy.toggleheart(False)
+            globals.ibuddy.sendcommand()
+            globals.heart = "False"
+        elif globals.heart == "False":
+            globals.ibuddy.toggleheart(True)
+            globals.ibuddy.sendcommand()
+            globals.heart = "True"
+
     if cmd == 'True' or cmd == 'true':
         globals.ibuddy.toggleheart(True)
         globals.ibuddy.sendcommand()
+        globals.heart = "True"
     elif cmd == 'False' or cmd == 'false':
         globals.ibuddy.toggleheart(False)
         globals.ibuddy.sendcommand()
+        globals.heart = "False"
+
+
 
 @bot.command(name='color')
 async def color_command(ctx):
@@ -151,12 +177,12 @@ async def rainbow_command(ctx):
     buddy_manager.colourloop(1)
 
 @bot.command(name='panic')
-async def rainbow_command(ctx):
+async def panic_command(ctx):
 
     buddy_manager.panic(10)
 
 @bot.command(name='flap')
-async def rainbow_command(ctx):
+async def flap_command(ctx):
 
     buddy_manager.flaploop(10)
 
@@ -169,3 +195,7 @@ async def cmd_command(ctx):
         print("Executing: ", cmd)
         globals.ibuddy.executecommand(cmd)
     globals.ibuddy.reset()
+
+def run():
+    print("Starting Twitch Bot")
+    bot.run()
